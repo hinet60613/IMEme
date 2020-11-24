@@ -17,10 +17,10 @@ def getProperFontSize(text, fontName, width):
     upper_bound = 1
     font = ImageFont.truetype(fontName, upper_bound)
     while font.getsize(text)[0] < width:
-        upper_bound += 1
+        upper_bound *= 2
         font = ImageFont.truetype(fontName, upper_bound)
 
-    lo, hi = upper_bound - 1, upper_bound
+    lo, hi = upper_bound // 2, upper_bound
     while lo < hi:
         mid = (lo + hi) // 2
         font = ImageFont.truetype(fontName, mid)
