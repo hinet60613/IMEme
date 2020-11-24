@@ -32,21 +32,13 @@ def getProperFontSize(text, fontName, width):
 
 
 def drawText(draw, location, text, text_fill, border_fill, font):
-    x, y = location
-    BORDER_WIDTH = 3
-    draw.text((x - BORDER_WIDTH, y), text, fill=border_fill, font=font)
-    draw.text((x + BORDER_WIDTH, y), text, fill=border_fill, font=font)
-    draw.text((x, y - BORDER_WIDTH), text, fill=border_fill, font=font)
-    draw.text((x, y + BORDER_WIDTH), text, fill=border_fill, font=font)
-    draw.text((x - BORDER_WIDTH, y - BORDER_WIDTH),
-              text, fill=border_fill, font=font)
-    draw.text((x - BORDER_WIDTH, y + BORDER_WIDTH),
-              text, fill=border_fill, font=font)
-    draw.text((x + BORDER_WIDTH, y - BORDER_WIDTH),
-              text, fill=border_fill, font=font)
-    draw.text((x + BORDER_WIDTH, y + BORDER_WIDTH),
-              text, fill=border_fill, font=font)
-    draw.text((x, y), text, fill=text_fill, font=font)
+    loc_x, loc_y = location
+    border_width = 3
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            x, y = loc_x + dx * border_width, loc_y + dy * border_width
+            draw.text((x, y), text, fill=border_fill, font=font)
+    draw.text((loc_x, loc_y), text, fill=text_fill, font=font)
 
 
 def addText(img, text, alignment):
