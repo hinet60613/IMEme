@@ -1,3 +1,17 @@
+from enum import Enum
+
+
+class Alignment(Enum):
+    TOP = 'top'
+    BOTTOM = 'bottom'
+
+
+class Color(Enum):
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    GREEN = (0, 255, 0)
+
+
 def getProperFontSize(text, fontName, width):
     from PIL import ImageFont
     upper_bound = 1
@@ -35,30 +49,33 @@ def drawText(draw, location, text, text_fill, border_fill, font):
     draw.text((x, y), text, fill=text_fill, font=font)
 
 
+def addText(img, text, alignment):
+    from PIL import ImageFont, ImageDraw
+    width, height = img.size
+    font_name = 'Impact'
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype(
+        font_name, getProperFontSize(text, font_name, width))
+    x, y = 0, 0
+    if alignment is Alignment.TOP:
+        x, y = 0, 0
+    elif alignment is Alignment.BOTTOM:
+        text_height = font.getsize(text)[1]
+        x, y = 0, height - text_height
+    drawText(draw, (x, y), text, Color.WHITE.value, Color.BLACK.value, font)
+
+
 def generateMemeImage(text):
-    from PIL import Image, ImageFont, ImageDraw
+    from PIL import Image
     WIDTH, HEIGHT = 512, 512
-    COLOR_BLACK = (0, 0, 0)
-    COLOR_WHITE = (255, 255, 255)
-    COLOR_GREEN = (0, 255, 0)
     base_image_original = Image.open('templates/i_dont_always.png')
     base_image_resized = base_image_original.resize((WIDTH, HEIGHT))
-
-    memeImg = Image.new('RGBA', (WIDTH, HEIGHT), COLOR_GREEN)
+    memeImg = Image.new('RGBA', (WIDTH, HEIGHT), Color.GREEN.value)
     memeImg.paste(base_image_resized, (0, 0))
-    draw = ImageDraw.Draw(memeImg)
-    FONT_NAME = 'Impact'
     text = "I DON'T ALWAYS REPLY"
-    font = ImageFont.truetype(
-        FONT_NAME, getProperFontSize(text, FONT_NAME, WIDTH))
-    drawText(draw, (0, 0), text, COLOR_WHITE, COLOR_BLACK, font)
-
+    addText(memeImg, text, Alignment.TOP)
     text = "BUT WHEN I DO, I USE MEME"
-    font = ImageFont.truetype(
-        FONT_NAME, getProperFontSize(text, FONT_NAME, WIDTH))
-    text_height = font.getsize(text)[1]
-    drawText(draw, (0, HEIGHT - text_height),
-             text, COLOR_WHITE, COLOR_BLACK, font)
+    addText(memeImg, text, Alignment.BOTTOM)
 
     memeImg.save('output.png')
 
