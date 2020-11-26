@@ -43,6 +43,7 @@ def drawText(draw, location, text, text_fill, border_fill, font):
 
 def addText(img, text, alignment):
     from PIL import ImageFont, ImageDraw
+    text = text.strip()
     width, height = img.size
     font_name = 'Impact'
     draw = ImageDraw.Draw(img)
@@ -64,13 +65,16 @@ def generateMemeImage(text):
     base_image_resized = base_image_original.resize((WIDTH, HEIGHT))
     memeImg = Image.new('RGBA', (WIDTH, HEIGHT), Color.GREEN.value)
     memeImg.paste(base_image_resized, (0, 0))
-    text = "I DON'T ALWAYS REPLY"
-    addText(memeImg, text, Alignment.TOP)
-    text = "BUT WHEN I DO, I USE MEME"
-    addText(memeImg, text, Alignment.BOTTOM)
 
-    memeImg.save('output.png')
+    text = text.upper()
+    split_index = text.find("BUT") - 1
+    if not split_index:
+        raise IndexError
+    addText(memeImg, text[:split_index], Alignment.TOP)
+    addText(memeImg, text[split_index:], Alignment.BOTTOM)
+    return memeImg
 
 
 if __name__ == "__main__":
-    generateMemeImage("I don't always reply. But when I do, I use meme.")
+    img = generateMemeImage("I don't always reply but when I do, I use meme.")
+    img.save('output.png')
