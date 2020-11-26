@@ -60,11 +60,10 @@ def addText(img, text, alignment):
 
 def generateMemeImage(text):
     from PIL import Image
-    WIDTH, HEIGHT = 512, 512
     base_image_original = Image.open('templates/i_dont_always.png')
-    base_image_resized = base_image_original.resize((WIDTH, HEIGHT))
-    memeImg = Image.new('RGBA', (WIDTH, HEIGHT), Color.GREEN.value)
-    memeImg.paste(base_image_resized, (0, 0))
+    width, height = base_image_original.size
+    memeImg = Image.new('RGBA', (width, height), Color.GREEN.value)
+    memeImg.paste(base_image_original, (0, 0))
 
     text = text.upper()
     split_index = text.find("BUT") - 1
@@ -76,5 +75,6 @@ def generateMemeImage(text):
 
 
 if __name__ == "__main__":
-    img = generateMemeImage("I don't always reply but when I do, I use meme.")
+    img = generateMemeImage(
+        "I don't always send meme. but when I do, I use IMEME")
     img.save('output.png')
